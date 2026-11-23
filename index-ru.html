@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Своя память · Москва 2050</title>
+
+  <!-- Golos Text: шрифт российской студии Paratype, поддерживает кириллицу
+       (General Sans кириллицу не поддерживает) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap">
+
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Ajustes solo para la versión en ruso */
+    :root { --fuente: "Golos Text", system-ui, sans-serif; }
+    .gigante { font-size: clamp(44px, min(7vw, 11.5vh), 118px); }
+    .portada__frase { font-size: clamp(28px, min(4vw, 6.6vh), 66px); max-width: 19em; }
+    .grande { font-size: clamp(40px, min(6.2vw, 10.5vh), 100px); }
+  </style>
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== ШАПКА ===== -->
+  <header class="header">
+    <a href="#inicio" class="logo">
+      <span class="logo__simbolo" aria-hidden="true"><i></i><i></i></span>
+      Своя память
+    </a>
+    <div class="header__der">
+      <nav class="idiomas" aria-label="Язык">
+        <a href="index.html" lang="es">ES</a>
+        <a href="index-ru.html" aria-current="page">RU</a>
+      </nav>
+      <p class="header__meta">Москва <span>2050</span></p>
+    </div>
+  </header>
+
+  <nav class="indice" id="indice" aria-label="Разделы"></nav>
+
+  <nav class="control" aria-label="Навигация по странице">
+    <button class="control__flecha" id="anterior" aria-label="Предыдущий раздел">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+    </button>
+
+    <span class="control__barra" aria-hidden="true"><i id="barraProgreso"></i></span>
+    <span class="control__aviso" id="avisoSeguir" aria-live="polite"></span>
+
+    <button class="control__flecha" id="siguiente" aria-label="Следующий раздел">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
+    </button>
+
+    <button class="control__ia" id="modoIA" aria-pressed="false">
+      <span class="conmutador" aria-hidden="true"><i></i></span>
+      Режим ИИ
+    </button>
+  </nav>
+
+  <div class="aviso-ia" role="status">Вы видите версию, которую создал бы ИИ</div>
+
+  <main>
+
+    <!-- 01 · ОБЛОЖКА -->
+    <section class="bloque bloque--fijo portada" id="inicio" data-nombre="Обложка" style="--alto: 230vh">
+      <div class="fijo">
+        <h1 class="portada__frase" data-anim="lineas">
+          <span class="linea"><span>Интерфейс, который заставляет ИИ</span></span>
+          <span class="linea"><span><em>спрашивать разрешения,</em> прежде чем</span></span>
+          <span class="linea"><span>переписать ваши воспоминания.</span></span>
+        </h1>
+
+        <div class="pista-scroll" aria-hidden="true">
+          <span class="pista-scroll__raton"><i></i></span>
+          Листайте
+        </div>
+
+        <figure class="portada__foto" id="portadaFoto">
+          <img src="assets/moscu-2050-vodogreev.webp" alt="Москва в 2050 году: вертикальный город с куполами, дирижаблями и зданиями-садами">
+          <div class="portada__velo"></div>
+          <ol class="portada__escenario" id="escenario">
+            <li data-en="0.30"><b>01</b><span>ИИ восстанавливает историю — даже то, чего никогда не было.</span></li>
+            <li data-en="0.52"><b>02</b><span>Её пополняют только те, у кого есть доступ.</span></li>
+            <li data-en="0.74"><b>03</b><span>Никто не понимает, как он принимает решения.</span></li>
+          </ol>
+          <figcaption class="pie-foto">Рис. 1 — Moscow 2050, Vodogreev · Earth 2050</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 02 · ИДЕЯ -->
+    <section class="bloque idea" id="idea" data-nombre="Идея" data-auto>
+      <div class="fijo">
+        <svg class="arco" viewBox="0 0 1000 900" preserveAspectRatio="none" aria-hidden="true">
+          <path id="arcoTrazo" pathLength="1" d="M -80 120 C 300 80, 560 330, 430 960"></path>
+        </svg>
+
+        <h2 class="gigante" id="gigante">
+          <span class="gigante__linea" data-lado="-1"><span class="sangria">Прошлое</span></span>
+          <span class="gigante__linea" data-lado="1">не хранят,</span>
+          <span class="gigante__linea" data-lado="-1">его</span>
+          <span class="gigante__linea" data-lado="1"><em>генерируют.</em></span>
+        </h2>
+
+        <div class="idea__lado" id="ideaLado">
+          <figure class="duotono">
+            <img src="assets/moscu-2050-kremlin.webp" alt="Кремль, воссозданный так, как его представил бы ИИ">
+            <figcaption class="pie-foto">Рис. 2 — «Идеальное» прошлое, созданное ИИ</figcaption>
+          </figure>
+          <p>
+            В Москве 2050 года ИИ восстанавливает историю по тому, что загружают люди. <b>Своя память</b> — это недостающая пауза: прежде чем тронуть воспоминание, ИИ спрашивает вас, показывает, что изменит, и решение остаётся за вами.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · КАК ЭТО РАБОТАЕТ -->
+    <section class="bloque bloque--fijo como" id="como" data-nombre="Как это работает" style="--alto: 320vh">
+      <div class="fijo">
+        <div class="como__pista" id="comoPista">
+          <div class="como__intro">
+            <h2 class="grande" data-deslizar>
+              <span class="desliza" data-lado="-1">Как это</span>
+              <span class="desliza" data-lado="1">работает</span>
+            </h2>
+            <p class="cabeza__nota">Три шага. Ни один не происходит автоматически. Листайте дальше →</p>
+          </div>
+
+          <article class="paso">
+            <figure class="paso__imagen">
+              <img src="assets/recuerdo/0-original.jpg" alt="">
+              <span class="paso__aviso">
+                <b>Нейроморфный архив</b>
+                хочет использовать «Мост у Кремля»
+              </span>
+            </figure>
+            <div class="paso__texto">
+              <span class="paso__num">01</span>
+              <h3>Приходит запрос</h3>
+              <p>ИИ сообщает, какое воспоминание хочет использовать и зачем. Ничего не происходит без вашего ведома.</p>
+            </div>
+          </article>
+
+          <article class="paso">
+            <figure class="paso__imagen paso__imagen--partida">
+              <img src="assets/recuerdo/0-original.jpg" alt="">
+              <img src="assets/recuerdo/4-reconstruir.jpg" alt="">
+            </figure>
+            <div class="paso__texto">
+              <span class="paso__num">02</span>
+              <h3>Вы сравниваете</h3>
+              <p>Ваш оригинал рядом с версией ИИ, каждое изменение отмечено.</p>
+            </div>
+          </article>
+
+          <article class="paso">
+            <figure class="paso__imagen">
+              <img src="assets/recuerdo/0-original.jpg" alt="">
+              <span class="paso__sello">Защищено</span>
+            </figure>
+            <div class="paso__texto">
+              <span class="paso__num">03</span>
+              <h3>Вы решаете и подписываете</h3>
+              <p>Сохраняете оригинал, принимаете изменения с пометкой ИИ или отказываетесь от реконструкции.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="como__progreso" aria-hidden="true"><i id="comoBarra"></i></div>
+      </div>
+    </section>
+
+    <!-- 04 · ПОПРОБУЙТЕ -->
+    <section class="bloque demo" id="demo" data-nombre="Попробуйте">
+      <div class="demo__arriba">
+        <div class="demo__titulo">
+          <h2 class="grande" data-deslizar>
+            <span class="desliza desliza--pegada" data-lado="-1">Попро</span><span class="desliza desliza--pegada" data-lado="1"><em>буйте</em></span>
+          </h2>
+          <p class="cabeza__nota" data-anim="subir">Выберите, насколько может вмешаться ИИ, и перетащите линию, чтобы сравнить.</p>
+        </div>
+
+        <div class="regla" data-anim="subir" style="--d: .15s">
+          <div class="regla__cabeza">
+            <span class="regla__etiqueta">Уровень вмешательства ИИ</span>
+            <span class="regla__valor"><output id="nivelValor" for="nivel">63</output>%</span>
+          </div>
+
+          <div class="regla__escala" id="escala">
+            <span class="regla__lleno" id="reglaLleno"></span>
+            <span class="regla__aguja" id="aguja"><b id="nivelNombre">Переосмыслить</b></span>
+            <input type="range" id="nivel" min="1" max="100" value="63"
+                   aria-label="Уровень вмешательства ИИ, от 1 до 100 процентов">
+          </div>
+
+          <ol class="regla__zonas" id="niveles">
+            <li data-desde="1"><b>Восстановить</b><span>Добавляет цвет</span></li>
+            <li data-desde="26"><b>Дополнить</b><span>Убирает повреждения</span></li>
+            <li data-desde="51"><b>Переосмыслить</b><span>Меняет небо</span></li>
+            <li data-desde="76"><b>Перестроить</b><span>Добавляет то, чего не было</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="demo__escena">
+        <div class="demo__tarjeta" id="demoTarjeta">
+          <div class="visor" id="visor" style="--pos: 50%;">
+            <div class="visor__ia" id="versionesIA">
+              <img class="visor__img" src="assets/recuerdo/1-restaurar.jpg" alt="Версия ИИ: восстановленная и раскрашенная">
+              <img class="visor__img" src="assets/recuerdo/2-completar.jpg" alt="Версия ИИ: повреждения убраны">
+              <img class="visor__img" src="assets/recuerdo/3-reinterpretar.jpg" alt="Версия ИИ: небо переосмыслено">
+              <img class="visor__img" src="assets/recuerdo/4-reconstruir.jpg" alt="Версия ИИ: сцена перестроена с новыми элементами">
+            </div>
+            <img class="visor__img visor__img--original" src="assets/recuerdo/0-original.jpg" alt="Ваше оригинальное воспоминание: открытка в сепии с мостом у Кремля">
+
+            <span class="visor__rotulo">Ваш оригинал</span>
+            <span class="visor__rotulo visor__rotulo--der">ИИ · <b id="rotuloNivel">63</b>% создано</span>
+            <span class="visor__sello" id="seloHumano">Проверка человеком включена</span>
+
+            <i class="marcador" data-desde="1"  style="top: 20%; left: 64%;">1</i>
+            <i class="marcador" data-desde="26" style="top: 9%;  left: 52%;">2</i>
+            <i class="marcador" data-desde="51" style="top: 20%; left: 86%;">3</i>
+            <i class="marcador" data-desde="76" style="top: 82%; left: 70%;">4</i>
+
+            <div class="visor__linea">
+              <span class="visor__manija" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg>
+              </span>
+            </div>
+            <input type="range" min="0" max="100" value="50" id="deslizador" aria-label="Сравнить оригинал с версией ИИ">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · РЕШЕНИЕ -->
+    <section class="bloque decide-bloque" id="decide" data-nombre="Решение">
+      <div class="cabeza">
+        <h2 class="grande" data-deslizar>
+          <span class="desliza desliza--pegada" data-lado="-1">Решать</span> <span class="desliza desliza--pegada" data-lado="1"><em>вам</em></span>
+        </h2>
+        <p class="cabeza__nota" data-anim="subir">Ничего не принимается по умолчанию.<br>Нет ответа — воспоминание не используется.</p>
+      </div>
+
+      <div class="decide">
+        <article class="humano" data-anim="subir" style="--d: .1s">
+          <div class="humano__cabeza">
+            <div>
+              <p class="etiqueta-seccion">Помощь человека</p>
+              <h3 class="humano__titulo">Проверить вместе с человеком</h3>
+            </div>
+            <button class="interruptor" id="humano" aria-pressed="false" aria-label="Запросить проверку человеком">
+              <span class="interruptor__no" aria-hidden="true">Нет</span>
+              <span class="interruptor__si" aria-hidden="true">Да</span>
+              <i aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <p class="humano__texto">Живой человек проверит воспоминание вместе с вами, прежде чем ИИ его использует. Без его и вашей подписи ничего не происходит.</p>
+
+          <fieldset class="acompanante">
+            <legend>Кто будет с вами?</legend>
+            <label><input type="radio" name="acompanante" value="Коллектив памяти" checked><span>Коллектив памяти</span><small>С вашего уровня города</small></label>
+            <label><input type="radio" name="acompanante" value="Родственник"><span>Родственник</span><small>Тот, кто был там</small></label>
+            <label><input type="radio" name="acompanante" value="Районный архивист"><span>Районный архивист</span><small>Знает местную историю</small></label>
+          </fieldset>
+
+          <p class="humano__estado"><span class="avatares" aria-hidden="true"><i>ВА</i><i>ЛК</i><i>МС</i></span><span id="humanoEstado">Выключена · вы решаете сами</span></p>
+        </article>
+
+        <div class="decision" data-anim="subir" style="--d: .2s">
+          <p class="etiqueta-seccion">Что изменил ИИ</p>
+          <ul class="cambios">
+            <li data-desde="1"><i class="marcador">1</i> Придуманные цвета</li>
+            <li data-desde="26"><i class="marcador">2</i> Стёрты пятна и повреждения</li>
+            <li data-desde="51"><i class="marcador">3</i> Голубое небо с облаками</li>
+            <li data-desde="76"><i class="marcador">4</i> Добавлены деревья, скамейки и люди</li>
+          </ul>
+
+          <div class="opciones" role="group" aria-label="Ваше решение">
+            <button class="opcion" data-decision="Вы сохранили оригинал. ИИ не будет его менять.">
+              <span class="opcion__letra">А</span>
+              <span class="opcion__texto">Сохранить оригинал</span>
+              <span class="opcion__flecha" aria-hidden="true">→</span>
+            </button>
+            <button class="opcion" data-decision="Вы приняли изменения. Они будут отмечены как созданные ИИ.">
+              <span class="opcion__letra">Б</span>
+              <span class="opcion__texto">Принять с пометкой ИИ</span>
+              <span class="opcion__flecha" aria-hidden="true">→</span>
+            </button>
+            <button class="opcion" data-decision="Реконструкции не будет. Ваше воспоминание защищено.">
+              <span class="opcion__letra">В</span>
+              <span class="opcion__texto">Не реконструировать</span>
+              <span class="opcion__flecha" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="decision__estado" id="estado" aria-live="polite">Ждём вашего решения</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · ПОЧЕМУ -->
+    <section class="bloque porque" id="por-que" data-nombre="Почему" data-auto>
+      <div class="fijo">
+        <p class="etiqueta-seccion">Почему</p>
+        <p class="porque__texto" id="textoLlenar">
+          В Москве 2050 года ИИ восстанавливает прошлое, и пополняют его только те, у кого есть доступ. Мы спрашиваем себя, как графический дизайн может вернуть людям контроль над тем, как рассказывается их собственная история.
+        </p>
+      </div>
+    </section>
+
+    <!-- 07 · ФУЛЛЕР -->
+    <section class="bloque bloque--fijo fuller-bloque" id="fuller" data-nombre="Фуллер" style="--alto: 200vh">
+      <div class="fijo">
+        <div class="cabeza">
+          <h2 class="grande" data-deslizar>
+            <span class="desliza" data-lado="-1">То, что ни один ИИ</span>
+            <span class="desliza" data-lado="1">не может <em>вычислить</em></span>
+          </h2>
+          <p class="cabeza__nota">Ответ на вопрос<br>Джарретта Фуллера</p>
+        </div>
+
+        <div class="fuller" id="fullerMazo">
+          <article class="fuller__tarjeta">
+            <span class="fuller__num">01</span>
+            <div><h3>Точка зрения</h3><p>ИИ знает, что произошло, но не знает, что это значит для того, кто это пережил.</p></div>
+          </article>
+          <article class="fuller__tarjeta">
+            <span class="fuller__num">02</span>
+            <div><h3>История</h3><p>В центре — реальный человек, с именем и подписью.</p></div>
+          </article>
+          <article class="fuller__tarjeta">
+            <span class="fuller__num">03</span>
+            <div><h3>Трение</h3><p>Намеренная пауза: увидеть, понять и решить.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · ФИНАЛ -->
+    <section class="bloque cierre" id="cierre" data-nombre="Финал">
+      <p class="cierre__frase" data-deslizar>
+        <span class="desliza" data-lado="-1">ИИ вычисляет прошлое.</span>
+        <span class="desliza" data-lado="1"><em>Дизайнер защищает</em></span>
+        <span class="desliza" data-lado="-1"><em>того, кто его прожил.</em></span>
+      </p>
+
+      <a href="#inicio" class="enlace enlace--claro" data-anim="subir" style="--d: .3s">
+        <span class="enlace__texto"><span data-texto="Вернуться к началу">Вернуться к началу</span></span>
+        <span class="enlace__flecha" aria-hidden="true">↑</span>
+      </a>
+
+      <div class="cinta" aria-hidden="true">
+        <div class="cinta__pista" id="cinta">
+          <span>Своя память</span><span>·</span><span>Своя память</span><span>·</span>
+          <span>Своя память</span><span>·</span><span>Своя память</span><span>·</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

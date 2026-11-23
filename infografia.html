@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infografía · Memoria propia · Moscú 2050</title>
+
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap">
+
+  <style>
+    /* =========================================================
+       INFOGRAFÍA · tabloide (doble carta) 11 × 17 in = 1056 × 1632 px
+       Composición editorial de periódico:
+       - imagen alta a sangre a la izquierda
+       - titular grande montado sobre la imagen
+       - introducción en columnas con letra capital
+       - cascada en diagonal con las fases de la experiencia
+       - números con líneas guía y círculos de foto en arco
+       Sistema visual de la web: teal + ámbar, General Sans.
+       ========================================================= */
+    @page { size: 11in 17in; margin: 0; }
+
+    :root {
+      --fondo: #F1F3F1;
+      --blanco: #FFFFFF;
+      --tinta: #0B1F20;
+      --electrico: #00898C;
+      --agua: #A5D8D5;
+      --ambar: #E5B66F;
+      --gris: #DFE3E1;
+      --texto-2: rgba(11, 31, 32, 0.72);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "General Sans", system-ui, sans-serif;
+      color: var(--tinta);
+      background: #c9cfcc;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    em { font-style: normal; color: var(--electrico); }
+    b { font-weight: 600; }
+
+    .ayuda { max-width: 11in; margin: 24px auto -16px; font-size: 13px; }
+
+    .hoja {
+      position: relative;
+      width: 11in;
+      height: 17in;
+      margin: 40px auto;
+      background: var(--fondo);
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    }
+
+    @media print {
+      body { background: none; }
+      .hoja { margin: 0; box-shadow: none; }
+      .ayuda { display: none; }
+    }
+
+    .texto {
+      font-size: 10.8px;
+      line-height: 1.42;
+      color: var(--texto-2);
+    }
+
+    .texto b { color: var(--tinta); }
+
+    .etq {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--electrico);
+    }
+
+    /* ---------- Cabezote de periódico ---------- */
+    .cabezote {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      padding: 0 28px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--fondo);
+    }
+
+    .cabezote span + span::before { content: "|  "; color: var(--texto-2); }
+
+    .cabezote__der {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      text-transform: none;
+      letter-spacing: -0.01em;
+    }
+
+    .cabezote__der i {
+      font-style: normal;
+      font-size: 19px;
+      font-weight: 400;
+      color: var(--electrico);
+    }
+
+    .cabezote__der b { font-size: 19px; font-weight: 500; }
+
+    /* ---------- Imagen alta a sangre ---------- */
+    .columna-imagen {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 470px;
+      height: 1230px;
+    }
+
+    .columna-imagen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 60% center;
+    }
+
+    /* La imagen se desvanece hacia la derecha y hacia abajo (máscara, sin bordes) */
+    .columna-imagen {
+      -webkit-mask-image:
+        linear-gradient(90deg, #000 50%, transparent 97%),
+        linear-gradient(180deg, #000 72%, transparent 98%);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(90deg, #000 50%, transparent 97%),
+        linear-gradient(180deg, #000 72%, transparent 98%);
+      mask-composite: intersect;
+    }
+
+    /* Sombra suave detrás de los números para que se lean sobre la foto */
+    .sombra {
+      position: absolute;
+      left: 0;
+      top: 560px;
+      width: 470px;
+      height: 520px;
+      z-index: 2;
+      background:
+        linear-gradient(90deg, rgba(11, 31, 32, 0.6), rgba(11, 31, 32, 0) 80%),
+        linear-gradient(180deg, rgba(11, 31, 32, 0), rgba(11, 31, 32, 0.25) 30%, rgba(11, 31, 32, 0.25) 70%, rgba(11, 31, 32, 0));
+      -webkit-mask-image: linear-gradient(180deg, transparent, black 20%, black 80%, transparent);
+      mask-image: linear-gradient(180deg, transparent, black 20%, black 80%, transparent);
+    }
+
+    .rotulo-imagen {
+      position: absolute;
+      left: 28px;
+      top: 1040px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--blanco);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .rotulo-imagen .icono { border-color: var(--blanco); background: rgba(11, 31, 32, 0.6); color: var(--blanco); }
+    .rotulo-imagen b { display: block; font-size: 13px; }
+    .rotulo-imagen span { font-size: 11px; }
+
+    /* ---------- Titular montado sobre la imagen ---------- */
+    .titular {
+      position: absolute;
+      top: 62px;
+      left: 330px;
+      z-index: 4;
+    }
+
+    .titular__ante {
+      margin-left: 120px;
+      font-size: 30px;
+      letter-spacing: -0.03em;
+    }
+
+    .titular h1 {
+      font-size: 132px;
+      font-weight: 400;
+      line-height: 0.82;
+      letter-spacing: -0.06em;
+    }
+
+    .titular h1 span { display: block; }
+
+    .titular h1 span:last-child {
+      margin-left: 90px;
+      color: var(--electrico);
+    }
+
+    .bajada {
+      position: absolute;
+      top: 86px;
+      left: 800px;
+      width: 228px;
+      z-index: 4;
+      font-size: 14px;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    /* ---------- Introducción en columnas con letra capital ---------- */
+    .intro {
+      position: absolute;
+      top: 330px;
+      left: 500px;
+      width: 528px;
+      columns: 3;
+      column-gap: 18px;
+      z-index: 4;
+    }
+
+    .intro p { margin-bottom: 8px; }
+
+    .intro p:first-child::first-letter {
+      float: left;
+      margin: 2px 6px 0 0;
+      font-size: 52px;
+      line-height: 0.8;
+      font-weight: 500;
+      color: var(--tinta);
+    }
+
+    .intro .pregunta {
+      padding: 8px 10px;
+      border-left: 3px solid var(--ambar);
+      background: var(--blanco);
+      color: var(--tinta);
+      font-size: 12px;
+      line-height: 1.3;
+      break-inside: avoid;
+    }
+
+    .leyenda {
+      position: absolute;
+      top: 556px;
+      left: 500px;
+      right: 28px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      font-size: 10.5px;
+      font-weight: 500;
+    }
+
+    .leyenda span::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 6px;
+      border-radius: 50%;
+      vertical-align: -1px;
+      background: var(--c);
+    }
+
+    /* ---------- Cascada de fases ---------- */
+    .fase {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      right: 28px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    /* Foto recortada en ángulo, como los recuadros de la referencia */
+    .fase__foto {
+      position: relative;
+      height: 118px;
+      overflow: hidden;
+      clip-path: polygon(10% 0, 100% 0, 92% 100%, 0 100%);
+      background: var(--tinta);
+    }
+
+    .fase__foto img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .fase__foto--partida img:last-child {
+      clip-path: polygon(56% 0, 100% 0, 100% 100%, 44% 100%);
+    }
+
+    .fase__foto--personas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--agua);
+    }
+
+    .fase__foto--personas span {
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      margin-left: -12px;
+      border-radius: 50%;
+      border: 3px solid var(--agua);
+      background: var(--blanco);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .fase__foto--personas span:first-child { margin-left: 0; background: var(--ambar); }
+
+    .sello {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      padding: 4px 8px;
+      border: 2px solid var(--electrico);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--electrico);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transform: translate(-50%, -50%) rotate(-10deg);
+    }
+
+    .fase__cabeza {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .icono {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid var(--electrico);
+      background: var(--blanco);
+      color: var(--electrico);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .fase h2 {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .fase h2 small {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--texto-2);
+    }
+
+    .fase .texto { max-width: 400px; }
+
+    /* ---------- Parte de abajo: teorías + sistema en círculos ---------- */
+    .abajo {
+      position: absolute;
+      top: 1290px;
+      left: 28px;
+      right: 28px;
+      display: grid;
+      grid-template-columns: 250px 230px 1fr;
+      gap: 22px;
+    }
+
+    .abajo h3 {
+      margin: 4px 0 8px;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .lista { display: grid; gap: 6px; }
+
+    .lista li {
+      position: relative;
+      padding-left: 14px;
+      list-style: none;
+      font-size: 10.8px;
+      line-height: 1.38;
+      color: var(--texto-2);
+    }
+
+    .lista li::before {
+      content: "»";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 600;
+      color: var(--electrico);
+    }
+
+    .lista b { color: var(--tinta); }
+
+    /* Números grandes con línea guía hacia arriba */
+    .cifra {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 118px;
+      z-index: 5;
+    }
+
+    .cifra__num {
+      font-size: 54px;
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      color: var(--ambar);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .cifra .texto {
+      margin-top: 6px;
+      color: var(--blanco);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .cifra .texto b { color: var(--blanco); }
+
+    .cifra::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      bottom: calc(100% + 6px);
+      width: 1px;
+      height: var(--guia);
+      background: var(--blanco);
+    }
+
+    .cifra::after {
+      content: "";
+      position: absolute;
+      left: -1px;
+      bottom: calc(100% + 6px + var(--guia));
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--blanco);
+    }
+
+    /* Círculos en arco: color, tipografía y retícula */
+    .circulos {
+      position: relative;
+      height: 300px;
+    }
+
+    .circulo {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: 160px;
+    }
+
+    .circulo__forma {
+      display: grid;
+      place-items: center;
+      width: 104px;
+      height: 104px;
+      margin-bottom: 8px;
+      border-radius: 50%;
+      border: 4px solid var(--blanco);
+      box-shadow: 0 10px 24px rgba(11, 31, 32, 0.18);
+      overflow: hidden;
+    }
+
+    .circulo--color .circulo__forma {
+      background: conic-gradient(
+        #F1F3F1 0 60deg, #0B1F20 60deg 120deg, #00898C 120deg 180deg,
+        #006D70 180deg 240deg, #A5D8D5 240deg 300deg, #E5B66F 300deg 360deg);
+    }
+
+    .circulo--tipo .circulo__forma {
+      background: var(--tinta);
+      color: var(--blanco);
+      font-size: 52px;
+      letter-spacing: -0.05em;
+    }
+
+    .circulo--reticula .circulo__forma {
+      background:
+        repeating-linear-gradient(90deg, rgba(0, 137, 140, 0.35) 0 6px, transparent 6px 9.6px),
+        var(--blanco);
+    }
+
+    .circulo h4 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--electrico);
+    }
+
+    .circulo .texto { margin-top: 4px; }
+
+    .codigos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px 8px;
+      margin-top: 4px;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--tinta);
+    }
+
+    /* ---------- Pie ---------- */
+    .pie {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 14px;
+      padding-top: 8px;
+      border-top: 3px solid var(--tinta);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 8.5px;
+      font-style: italic;
+      color: var(--texto-2);
+    }
+  </style>
+</head>
+<body>
+
+  <p class="ayuda">Infografía tabloide (doble carta, 11 × 17 in). Para imprimir: Ctrl + P → papel "Tabloide" o "11 × 17", márgenes "Ninguno" y activar "Gráficos de fondo".</p>
+
+  <article class="hoja">
+
+    <!-- Cabezote de periódico -->
+    <header class="cabezote">
+      <div><span>Cultura del Diseño</span> <span>Infografía de proceso</span> <span>Juan Camilo Bravo Olave</span></div>
+      <div class="cabezote__der"><i>escenario</i> | <b>Moscú 2050</b> | <span>Línea B</span></div>
+    </header>
+
+    <!-- Imagen alta a sangre -->
+    <figure class="columna-imagen">
+      <img src="assets/moscu-2050-vodogreev.webp" alt="Moscú en 2050: ciudad vertical con domos y dirigibles">
+    </figure>
+
+    <div class="sombra" aria-hidden="true"></div>
+
+    <!-- Números con líneas guía sobre la imagen -->
+    <div class="cifra" style="--x: 28px; --y: 640px; --guia: 120px">
+      <p class="cifra__num">16</p>
+      <p class="texto">predicciones de <b>Earth 2050</b> sobre Moscú analizadas por el grupo.</p>
+    </div>
+    <div class="cifra" style="--x: 168px; --y: 760px; --guia: 200px">
+      <p class="cifra__num">#5</p>
+      <p class="texto"><b>La IA reconstruye la historia</b> en 3D, incluso lo que nunca pasó.</p>
+    </div>
+    <div class="cifra" style="--x: 300px; --y: 880px; --guia: 150px">
+      <p class="cifra__num">#3</p>
+      <p class="texto">Crece la desigualdad: <b>solo quienes tienen acceso</b> alimentan esa historia.</p>
+    </div>
+
+    <div class="rotulo-imagen">
+      <span class="icono">●</span>
+      <div><b>MOSCOW 2050</b><span>— Vodogreev · Earth 2050 (Kaspersky)</span></div>
+    </div>
+
+    <!-- Titular -->
+    <div class="titular">
+      <p class="titular__ante">Una interfaz para</p>
+      <h1><span>Memoria</span><span>propia</span></h1>
+    </div>
+
+    <p class="bajada">¿Qué pasa con tus recuerdos cuando una IA puede reescribir el pasado? Esta propuesta obliga a la máquina a <em>pedirte permiso</em> primero.</p>
+
+    <!-- Introducción en columnas -->
+    <div class="intro texto">
+      <p>En la Moscú de 2050 la realidad es un asunto de acceso. La ciudad crece en vertical, con domos climáticos, drones y avatares, pero no todos viven el mismo futuro.</p>
+      <p>Una IA reconstruye el pasado con lo que la gente sube y llena los vacíos con «lo que pudo haber sido». La realidad es <b>mediada</b>, porque el pasado se conoce por lo que un algoritmo decide recrear, y <b>frágil</b>, porque depende de sistemas que nadie entiende ni controla.</p>
+      <p class="pregunta">¿Cómo puede el diseño gráfico devolverles a las personas el <em>control sobre cómo se cuenta su propio pasado</em>?</p>
+      <p><b>Memoria propia</b> es una página web que simula la interfaz de 2050: antes de usar un recuerdo, la IA muestra qué cambiaría y cuánto lo alteraría. La persona decide. <b>Nada se toma por defecto.</b></p>
+      <p>El recorrido es un scroll que se detiene al final de cada sección: no se avanza sin terminar de leer. <b>Pruébala en la pantalla del exhibidor.</b></p>
+    </div>
+
+    <div class="leyenda">
+      <span style="--c: #0B1F20">Recuerdo humano</span>
+      <span style="--c: #00898C">Interfaz</span>
+      <span style="--c: #E5B66F">Cambio hecho por IA</span>
+    </div>
+
+    <!-- Cascada de fases -->
+    <article class="fase" style="--x: 380px; --y: 590px">
+      <div class="fase__foto"><img src="assets/recuerdo/0-original.jpg" alt=""></div>
+      <div>
+        <div class="fase__cabeza"><span class="icono">01</span><h2>Solicitud<small>— La IA pide permiso</small></h2></div>
+        <p class="texto">La IA avisa qué recuerdo quiere usar y para qué. En la portada, una foto de Moscú 2050 crece hasta llenar la pantalla y presenta el escenario en tres ideas.</p>
+      </div>
+    </article>
+
+    <article class="fase" style="--x: 420px; --y: 728px">
+      <div class="fase__foto fase__foto--partida"><img src="assets/recuerdo/0-original.jpg" alt=""><img src="assets/recuerdo/4-reconstruir.jpg" alt=""></div>
+      <div>
+        <div class="fase__cabeza"><span class="icono">02</span><h2>Comparación<small>— Original vs. versión IA</small></h2></div>
+        <p class="texto">Se arrastra una línea entre la postal en sepia y la versión generada. Cada cambio queda marcado con un punto ámbar: colores inventados, daños borrados, cielo nuevo, gente añadida.</p>
+      </div>
+    </article>
+
+    <article class="fase" style="--x: 446px; --y: 866px">
+      <div class="fase__foto"><img src="assets/recuerdo/3-reinterpretar.jpg" alt=""></div>
+      <div>
+        <div class="fase__cabeza"><span class="icono">03</span><h2>Nivel de IA<small>— De 1 a 100 %</small></h2></div>
+        <p class="texto">Una regla define cuánto puede intervenir la máquina: <b>restaurar</b>, <b>completar</b>, <b>reinterpretar</b> o <b>reconstruir</b>. La imagen cambia en vivo.</p>
+      </div>
+    </article>
+
+    <article class="fase" style="--x: 420px; --y: 1004px">
+      <div class="fase__foto fase__foto--personas"><span>VA</span><span>LK</span><span>MS</span></div>
+      <div>
+        <div class="fase__cabeza"><span class="icono">04</span><h2>Asistencia humana<small>— Una persona revisa contigo</small></h2></div>
+        <p class="texto">Antes de que la IA use el recuerdo, alguien de carne y hueso lo revisa: un familiar, el archivista del barrio o el colectivo de memoria. Sin su firma, nada avanza.</p>
+      </div>
+    </article>
+
+    <article class="fase" style="--x: 380px; --y: 1142px">
+      <div class="fase__foto"><img src="assets/recuerdo/0-original.jpg" alt=""><span class="sello">Protegido</span></div>
+      <div>
+        <div class="fase__cabeza"><span class="icono">05</span><h2>Decisión<small>— Tú decides y firmas</small></h2></div>
+        <p class="texto">Conservar el original, aceptar con marca de IA o no reconstruir. Si no respondes, el recuerdo no se usa.</p>
+      </div>
+    </article>
+
+    <!-- Parte de abajo -->
+    <section class="abajo">
+      <div>
+        <p class="etq">Vilém Flusser</p>
+        <h3>Abrir la caja negra</h3>
+        <ul class="lista">
+          <li>Los aparatos son <b>cajas negras</b>: vemos lo que entra y lo que sale, no cómo deciden.</li>
+          <li>La IA de 2050 es una caja negra que <b>reescribe la memoria</b>.</li>
+          <li>La interfaz la abre: <b>muestra cada cambio</b> y el % generado.</li>
+          <li>El usuario deja de ser funcionario del aparato y <b>juega contra él</b>: puede negarse.</li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="etq">Jarrett Fuller</p>
+        <h3>Lo que la IA no calcula</h3>
+        <ul class="lista">
+          <li><b>Punto de vista:</b> la IA sabe qué pasó, no qué significa para quien lo vivió.</li>
+          <li><b>Historia:</b> en el centro hay una persona real, con nombre y firma.</li>
+          <li><b>Fricción:</b> una pausa a propósito para ver, entender y decidir.</li>
+          <li><b>Intención gráfica:</b> claridad editorial, color que avisa y movimiento que guía.</li>
+        </ul>
+      </div>
+
+      <div class="circulos">
+        <div class="circulo circulo--color" style="--x: 0; --y: 96px">
+          <div class="circulo__forma"></div>
+          <h4>Color</h4>
+          <p class="texto">Base clara, petróleo, teal para la acción y <b>ámbar solo para lo que cambió la IA</b>.</p>
+        </div>
+
+        <div class="circulo circulo--tipo" style="--x: 170px; --y: 48px">
+          <div class="circulo__forma">Aa</div>
+          <h4>Tipografía</h4>
+          <p class="texto"><b>General Sans</b>, sans serif europea y legible. Titulares grandes en peso regular.</p>
+        </div>
+
+        <div class="circulo circulo--reticula" style="--x: 340px; --y: 0">
+          <div class="circulo__forma"></div>
+          <h4>Diagramación</h4>
+          <p class="texto">Retícula de <b>12 columnas</b>, márgenes de 48 px y secciones de pantalla completa que se detienen al terminar.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pie">
+      <span>Fuentes: Kaspersky, Earth 2050 · Moscow 2050, Vodogreev · V. Flusser, Hacia una filosofía de la fotografía · J. Fuller · Escenario grupal Moscú 2050.</span>
+      <span>Imágenes del recuerdo generadas con IA para la simulación.</span>
+    </footer>
+
+  </article>
+
+</body>
+</html>

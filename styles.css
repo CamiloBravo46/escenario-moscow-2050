@@ -1,0 +1,1765 @@
+/* =========================================================
+   MEMORIA PROPIA · Moscú 2050
+   Estilo: claro, titulares grandes en peso regular (referencia Lusion).
+   Scroll interactivo: secciones que se quedan fijas mientras la
+   animación avanza con la rueda, un tramo que se recorre de lado,
+   y movimiento que reacciona a la velocidad del scroll.
+   Paleta teal + ámbar · General Sans
+   ========================================================= */
+
+/* ---------- 1. Variables ---------- */
+:root {
+  --fondo:     #F1F3F1;
+  --blanco:    #FFFFFF;
+  --tinta:     #0B1F20;
+  --petroleo:  #073B3C;
+  --teal:      #006D70;
+  --electrico: #00898C;
+  --agua:      #A5D8D5;
+  --ambar:     #E5B66F;
+  --gris:      #DFE3E1;
+  --linea:     rgba(11, 31, 32, 0.14);
+  --texto-2:   rgba(11, 31, 32, 0.6);
+
+  --fuente: "General Sans", system-ui, sans-serif;
+  --margen: clamp(16px, 3.4vw, 48px);
+  --radio: clamp(16px, 1.6vw, 24px);
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+  --vel: 0deg;   /* script.js: inclinación según la velocidad del scroll */
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente);
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--tinta);
+  background: var(--fondo);
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+ol, ul { list-style: none; }
+img { display: block; }
+fieldset { border: none; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+em {
+  font-style: normal;
+  color: var(--electrico);
+}
+
+.etiqueta-seccion {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--electrico);
+}
+
+.grande {
+  font-size: clamp(44px, min(7.2vw, 12vh), 116px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  margin-bottom: clamp(28px, 4vw, 56px);
+}
+
+.cabeza__nota {
+  max-width: 28ch;
+  padding-bottom: 10px;
+  font-size: 15px;
+  color: var(--texto-2);
+}
+
+/* Pie de foto editorial */
+.pie-foto {
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- 3. Aparición al llegar a la pantalla ---------- */
+.linea {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.linea > span {
+  display: inline-block;
+  transition: transform 1.2s var(--curva);
+}
+
+.js [data-anim="lineas"]:not(.visible) .linea > span {
+  transform: translateY(108%);
+}
+
+.linea:nth-child(2) > span { transition-delay: 0.08s; }
+.linea:nth-child(3) > span { transition-delay: 0.16s; }
+
+.js [data-anim="subir"] {
+  transition: opacity 0.9s var(--curva), transform 1.1s var(--curva);
+  transition-delay: var(--d, 0s);
+}
+
+.js [data-anim="subir"]:not(.visible) {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Títulos cuyas palabras entran desde los lados con el scroll (script.js) */
+.desliza {
+  display: block;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.desliza--pegada {
+  display: inline-block;
+}
+
+/* ---------- 4. Encabezado ---------- */
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px var(--margen);
+  pointer-events: none;
+  transition: color 0.5s;
+}
+
+.header > * { pointer-events: auto; }
+
+/* Sobre la foto de la portada el encabezado se vuelve blanco */
+.header--claro,
+.oscuro .header { color: var(--blanco); }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.logo__simbolo {
+  position: relative;
+  width: 26px;
+  height: 26px;
+}
+
+.logo__simbolo i {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+}
+
+.logo__simbolo i:first-child {
+  top: 0;
+  left: 0;
+  background: currentColor;
+}
+
+.logo__simbolo i:last-child {
+  right: 0;
+  bottom: 0;
+  background: var(--electrico);
+  opacity: 0.9;
+  transition: transform 0.6s var(--curva);
+}
+
+.logo:hover .logo__simbolo i:last-child {
+  transform: translate(-8px, -8px);
+}
+
+.header__der {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Cambio de idioma ES / RU */
+.idiomas {
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.idiomas a {
+  padding: 3px 6px;
+  border-radius: 5px;
+  opacity: 0.45;
+  transition: opacity 0.3s;
+}
+
+.idiomas a:hover { opacity: 1; }
+
+.idiomas a[aria-current] {
+  opacity: 1;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+.header__meta {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header__meta span {
+  margin-left: 6px;
+  padding: 3px 8px;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+}
+
+/* ---------- 5. Índice lateral ---------- */
+.indice {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  transform: translateY(-50%);
+  transition: color 0.5s;
+}
+
+.oscuro .indice { color: var(--blanco); }
+
+.indice button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 14px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.indice__nombre {
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.3s, transform 0.4s var(--curva);
+  white-space: nowrap;
+}
+
+.indice__raya {
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.35;
+  transition: width 0.5s var(--curva), opacity 0.3s;
+}
+
+.indice:hover button.activo .indice__nombre,
+.indice button:hover .indice__nombre {
+  opacity: 1;
+  transform: none;
+}
+
+.indice button.activo .indice__raya {
+  width: 36px;
+  opacity: 1;
+}
+
+/* ---------- 6. Control inferior ---------- */
+.control {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 16px;
+  background: rgba(11, 31, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--blanco);
+  box-shadow: 0 20px 50px rgba(11, 31, 32, 0.25);
+  transform: translateX(-50%);
+}
+
+/* Botones cuadrados de flecha */
+.control__flecha {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.3s, transform 0.4s var(--curva);
+}
+
+.control__flecha:hover {
+  background: var(--blanco);
+  color: var(--tinta);
+}
+
+#siguiente:hover { transform: translateY(2px); }
+#anterior:hover  { transform: translateY(-2px); }
+
+.control__flecha:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Línea de progreso entre las dos flechas */
+.control__barra {
+  width: clamp(80px, 12vw, 160px);
+  height: 2px;
+  margin: 0 10px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+/* Aviso que aparece encima de la barra al terminar una sección */
+.control__aviso {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--tinta);
+  color: var(--blanco);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.35s, transform 0.5s var(--curva);
+  pointer-events: none;
+}
+
+.control__aviso b {
+  color: var(--ambar);
+  font-weight: 600;
+}
+
+.control.esperando .control__aviso {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* La flecha de "siguiente" late mientras espera */
+.control.esperando #siguiente {
+  background: var(--ambar);
+  color: var(--tinta);
+  animation: esperar 1.4s ease-in-out infinite;
+}
+
+@keyframes esperar {
+  50% { transform: translateY(3px); }
+}
+
+.control__barra i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--agua);
+  transform-origin: left;
+  transform: scaleX(var(--progreso, 0));
+}
+
+.control__ia {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  padding: 0 14px 0 12px;
+  margin-left: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.conmutador {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.4s;
+}
+
+.conmutador i {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--blanco);
+  transition: transform 0.5s var(--curva);
+}
+
+.control__ia[aria-pressed="true"] .conmutador { background: var(--ambar); }
+.control__ia[aria-pressed="true"] .conmutador i { transform: translateX(14px); }
+
+/* Aviso del modo IA */
+.aviso-ia {
+  position: fixed;
+  left: 50%;
+  top: 24px;
+  z-index: 60;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--ambar);
+  color: var(--tinta);
+  font-size: 14px;
+  font-weight: 500;
+  transform: translate(-50%, -200%);
+  transition: transform 0.6s var(--curva);
+}
+
+.modo-ia .aviso-ia { transform: translate(-50%, 0); }
+
+.modo-ia main img:not(.visor__img) {
+  filter: saturate(1.8) contrast(1.15) hue-rotate(-14deg) !important;
+}
+
+/* ---------- 7. Enlace con texto que rueda ---------- */
+.enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* La caja recorta; el texto de adentro sube y entra una copia desde abajo */
+.enlace__texto {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 4px;
+  line-height: 1.2;
+  box-shadow: inset 0 -1.5px 0 currentColor;
+}
+
+.enlace__texto > span {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.6s var(--curva);
+}
+
+.enlace__texto > span::after {
+  content: attr(data-texto);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  white-space: nowrap;
+}
+
+.enlace:hover .enlace__texto > span {
+  transform: translateY(-100%);
+}
+
+.enlace__flecha {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid currentColor;
+  border-radius: 10px;
+  font-size: 18px;
+  transition: background 0.4s, color 0.4s, transform 0.6s var(--curva);
+}
+
+.enlace:hover .enlace__flecha {
+  background: var(--tinta);
+  color: var(--blanco);
+  transform: rotate(-45deg);
+}
+
+.enlace--claro:hover .enlace__flecha {
+  background: var(--blanco);
+  color: var(--tinta);
+}
+
+/* ---------- 8. Bloques que se quedan fijos ---------- */
+.bloque {
+  position: relative;
+  overflow-x: clip; /* los títulos que entran de lado no generan scroll horizontal */
+}
+
+.bloque--fijo {
+  height: var(--alto, 200vh);
+}
+
+.fijo {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------- 9. Portada ---------- */
+.portada .fijo {
+  padding: 104px var(--margen) 0;
+}
+
+.portada__frase {
+  position: relative;
+  z-index: 2;
+  max-width: 17em;
+  font-size: clamp(32px, min(4.6vw, 7.4vh), 76px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  /* script.js: --e va de 0 a 1 mientras la foto crece */
+  opacity: calc(1 - var(--e, 0) * 1.4);
+  transform: translateY(calc(var(--e, 0) * -60px));
+}
+
+.pista-scroll {
+  position: absolute;
+  right: var(--margen);
+  top: calc(104px + clamp(32px, min(4.6vw, 7.4vh), 76px) * 2.1);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: calc(1 - var(--e, 0) * 3);
+}
+
+.pista-scroll__raton {
+  position: relative;
+  width: 22px;
+  height: 34px;
+  border: 1.5px solid currentColor;
+  border-radius: 12px;
+}
+
+.pista-scroll__raton i {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 3px;
+  height: 7px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  animation: rueda 1.6s ease-in-out infinite;
+}
+
+@keyframes rueda {
+  0%   { transform: translateY(0); opacity: 1; }
+  70%  { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* La foto empieza como tarjeta y crece hasta llenar la pantalla */
+.portada__foto {
+  --t: calc(1 - var(--e, 0));
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--tinta);
+  clip-path: inset(
+    calc(var(--t) * 37vh) calc(var(--t) * var(--margen)) calc(var(--t) * 22px) calc(var(--t) * var(--margen))
+    round calc(var(--t) * 24px + 0px)
+  );
+}
+
+.portada__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(calc(1.18 - var(--e, 0) * 0.18));
+}
+
+.portada__velo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 31, 32, 0.85), rgba(11, 31, 32, 0.15) 70%);
+  opacity: var(--v, 0);
+}
+
+/* Las tres predicciones aparecen una por una con el scroll */
+.portada__escenario {
+  position: absolute;
+  left: var(--margen);
+  bottom: 120px;
+  display: grid;
+  gap: 18px;
+  max-width: 640px;
+  color: var(--blanco);
+}
+
+.portada__escenario li {
+  display: grid;
+  grid-template-columns: 1.9em 1fr;
+  align-items: baseline;
+  gap: 18px;
+  font-size: clamp(22px, min(2.6vw, 4.4vh), 40px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s, transform 0.9s var(--curva), color 0.5s;
+}
+
+.portada__escenario li b {
+  font-weight: 500;
+  color: var(--ambar);
+}
+
+.portada__escenario li.activo {
+  opacity: 1;
+  transform: none;
+}
+
+/* Las anteriores quedan tenues: solo la última está "en foco" */
+.portada__escenario li.activo:has(~ li.activo) {
+  opacity: 0.45;
+}
+
+/* ---------- 10. La idea ---------- */
+.idea .fijo {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: clamp(24px, 5vw, 80px);
+  padding: 90px calc(var(--margen) + 40px) 90px var(--margen);
+}
+
+.arco {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.arco path {
+  fill: none;
+  stroke: var(--electrico);
+  stroke-width: 34;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2.2s var(--curva) 0.15s;
+}
+
+/* ---- La idea se anima sola cuando aparece (clase .animada desde script.js) ---- */
+.idea.animada .arco path {
+  stroke-dashoffset: 0;
+}
+
+.gigante {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(52px, min(9.4vw, 15vh), 160px);
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+}
+
+/* script.js mueve cada línea desde un lado distinto */
+/* Cada línea entra desde su lado, una detrás de otra */
+.gigante__linea {
+  display: block;
+  white-space: nowrap;
+  opacity: 0.1;
+  transform: translateX(calc(var(--lado, 1) * 55vw));
+  transition:
+    transform 1.5s var(--curva) calc(var(--i, 0) * 0.13s),
+    opacity 1s ease calc(var(--i, 0) * 0.13s);
+  will-change: transform;
+}
+
+.idea.animada .gigante__linea {
+  opacity: 1;
+  transform: none;
+}
+
+.sangria {
+  padding-left: 0.9em;
+}
+
+.idea__lado {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 28px;
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 1s ease 0.55s, transform 1.3s var(--curva) 0.55s;
+}
+
+.idea.animada .idea__lado {
+  opacity: 1;
+  transform: none;
+}
+
+.idea__lado p {
+  max-width: 40ch;
+  font-size: clamp(16px, 1.3vw, 19px);
+  color: var(--texto-2);
+}
+
+.idea__lado b {
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+.duotono {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radio);
+  overflow: hidden;
+  background: var(--electrico);
+  /* la imagen se descubre de arriba hacia abajo */
+  clip-path: inset(0 0 100% 0 round var(--radio));
+  transform: skewY(var(--vel));
+  transition: clip-path 1.4s var(--curva) 0.7s;
+}
+
+.duotono img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.25) brightness(1.1);
+  mix-blend-mode: screen;
+  transform: scale(1.2);
+  transition: transform 2s var(--curva) 0.7s;
+}
+
+.idea.animada .duotono {
+  clip-path: inset(0 0 0 0 round var(--radio));
+}
+
+.idea.animada .duotono img {
+  transform: scale(1);
+}
+
+/* ---------- 11. Cómo funciona: tramo horizontal ---------- */
+.como .fijo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.como__pista {
+  display: flex;
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+  width: max-content;
+  padding: 0 var(--margen);
+  will-change: transform;
+}
+
+.como__intro {
+  display: grid;
+  gap: 24px;
+  width: min(34vw, 460px);
+}
+
+.paso {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: end;
+  gap: 32px;
+  width: min(66vw, 980px);
+  transition: opacity 0.6s;
+}
+
+.paso:not(.activo) {
+  opacity: 0.4;
+}
+
+.paso__imagen {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radio);
+  overflow: hidden;
+  background: var(--gris);
+  transform: skewX(calc(var(--vel) * -1));
+}
+
+.paso__imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+}
+
+/* Paso 1: aviso tipo notificación */
+.paso__aviso {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  display: grid;
+  gap: 2px;
+  max-width: 280px;
+  padding: 14px 16px 14px 40px;
+  border-radius: 12px;
+  background: var(--blanco);
+  font-size: 13px;
+  line-height: 1.35;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+.paso__aviso::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ambar);
+  box-shadow: 0 0 0 4px rgba(229, 182, 111, 0.3);
+}
+
+.paso__aviso b { font-weight: 600; }
+
+/* Paso 2: original e IA partidos en diagonal */
+.paso__imagen--partida img {
+  position: absolute;
+  inset: 0;
+}
+
+.paso__imagen--partida img:last-child {
+  clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
+}
+
+/* Paso 3: sello */
+.paso__sello {
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  padding: 10px 16px;
+  border: 2.5px solid var(--electrico);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--electrico);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+}
+
+.paso__texto {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 6px;
+}
+
+.paso__num {
+  font-size: clamp(64px, min(8vw, 13vh), 132px);
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: var(--electrico);
+}
+
+.paso h3 {
+  font-size: clamp(28px, 2.8vw, 44px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.paso p {
+  max-width: 32ch;
+  font-size: 16px;
+  color: var(--texto-2);
+}
+
+.como__progreso {
+  position: absolute;
+  left: var(--margen);
+  right: var(--margen);
+  bottom: 96px;
+  height: 2px;
+  background: var(--linea);
+}
+
+.como__progreso i {
+  display: block;
+  height: 100%;
+  background: var(--tinta);
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+}
+
+/* ---------- 12. Pruébalo ---------- */
+.demo {
+  padding: clamp(100px, 12vw, 160px) var(--margen) clamp(60px, 8vw, 120px);
+}
+
+.demo__arriba {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  align-items: end;
+  gap: clamp(32px, 5vw, 80px);
+  margin-bottom: clamp(28px, 3vw, 44px);
+}
+
+.demo__titulo {
+  display: grid;
+  gap: 18px;
+}
+
+/* Regla del nivel de intervención */
+.regla {
+  display: grid;
+  gap: 16px;
+}
+
+.regla__cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.regla__etiqueta {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--electrico);
+}
+
+.regla__valor {
+  font-size: clamp(40px, 4.4vw, 68px);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.regla__escala {
+  --n: 63%;
+  position: relative;
+  height: 44px;
+  margin-top: 30px;
+  /* marcas finas cada 2 % y gruesas cada 25 % */
+  background-image:
+    linear-gradient(to right, rgba(11, 31, 32, 0.3) 1px, transparent 1px),
+    linear-gradient(to right, var(--tinta) 2px, transparent 2px);
+  background-size: 2% 14px, 25% 30px;
+  background-position: left bottom, left bottom;
+  background-repeat: repeat-x;
+  border-right: 2px solid var(--tinta);
+}
+
+.regla__lleno {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--n);
+  height: 4px;
+  background: var(--electrico);
+  transition: width 0.15s;
+}
+
+.regla__aguja {
+  position: absolute;
+  left: var(--n);
+  bottom: 0;
+  width: 2px;
+  height: 52px;
+  background: var(--tinta);
+  transform: translateX(-1px);
+  transition: left 0.15s;
+  pointer-events: none;
+}
+
+.regla__aguja b {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: 6px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--tinta);
+  color: var(--blanco);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.regla__escala input {
+  position: absolute;
+  inset: -20px 0 0 0;
+  width: 100%;
+  height: calc(100% + 20px);
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.regla__escala:has(input:focus-visible) {
+  outline: 2px solid var(--electrico);
+  outline-offset: 8px;
+  border-radius: 4px;
+}
+
+.regla__zonas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.regla__zonas li {
+  display: grid;
+  gap: 2px;
+  padding-top: 10px;
+  border-top: 2px solid var(--gris);
+  font-size: 13px;
+  color: var(--texto-2);
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.regla__zonas b {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--tinta);
+}
+
+.regla__zonas li.alcanzado { border-top-color: var(--agua); }
+.regla__zonas li.actual    { border-top-color: var(--electrico); }
+.regla__zonas li.actual b  { color: var(--electrico); }
+
+/* Comparador: llega inclinado y se endereza con el scroll */
+.demo__escena {
+  perspective: 1600px;
+}
+
+.demo__tarjeta {
+  transform:
+    rotateX(var(--rx, 0deg))
+    scale(var(--sc, 1));
+  transform-origin: center top;
+  border-radius: calc(var(--radio) * 1.3);
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(11, 31, 32, 0.2);
+  will-change: transform;
+}
+
+.visor {
+  position: relative;
+  aspect-ratio: 1600 / 997;
+  max-height: 82vh;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  background: #e9e1cf;
+}
+
+.visor__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.03);
+}
+
+.visor__ia .visor__img {
+  opacity: 0;
+  transition: opacity 0.25s linear;
+}
+
+.visor__img--original {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.visor__rotulo {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.visor__rotulo--der {
+  left: auto;
+  right: 18px;
+  background: var(--tinta);
+  color: var(--blanco);
+}
+
+.visor__rotulo b { font-weight: 600; }
+
+.visor__sello {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 2;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--ambar);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.5s var(--curva);
+}
+
+.humano-activo .visor__sello {
+  opacity: 1;
+  transform: none;
+}
+
+.visor__linea {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  z-index: 3;
+  width: 2px;
+  background: var(--blanco);
+  transform: translateX(-1px);
+  pointer-events: none;
+}
+
+.visor__manija {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--blanco);
+  color: var(--tinta);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+  transition: transform 0.4s var(--curva);
+}
+
+.visor:hover .visor__manija {
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.visor input[type="range"] {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.marcador {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ambar);
+  color: var(--tinta);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  transition: opacity 0.4s, transform 0.5s var(--curva);
+}
+
+.visor .marcador {
+  position: absolute;
+  z-index: 2;
+  box-shadow: 0 0 0 6px rgba(229, 182, 111, 0.35);
+  animation: latido 2.4s ease-in-out infinite;
+}
+
+@keyframes latido {
+  50% { box-shadow: 0 0 0 14px rgba(229, 182, 111, 0); }
+}
+
+.visor .marcador.apagado {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+/* ---------- 13. Tú decides ---------- */
+.decide-bloque {
+  padding: clamp(60px, 8vw, 120px) var(--margen) clamp(80px, 10vw, 160px);
+}
+
+.decide {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 16px;
+}
+
+.humano {
+  display: grid;
+  align-content: start;
+  gap: 22px;
+  padding: clamp(24px, 3vw, 44px);
+  border-radius: calc(var(--radio) * 1.3);
+  background: var(--blanco);
+  transition: background 0.6s var(--curva), color 0.6s;
+}
+
+.humano__cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.humano__titulo {
+  margin-top: 6px;
+  font-size: clamp(26px, 2.6vw, 40px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.humano__texto {
+  max-width: 42ch;
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+/* Interruptor No / Sí */
+.interruptor {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 96px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--gris);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: background 0.4s;
+}
+
+.interruptor i {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 44px;
+  height: 36px;
+  border-radius: 7px;
+  background: var(--blanco);
+  box-shadow: 0 2px 8px rgba(11, 31, 32, 0.15);
+  transition: transform 0.5s var(--curva);
+}
+
+.interruptor span {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  text-align: center;
+}
+
+.interruptor[aria-pressed="true"] {
+  background: var(--ambar);
+}
+
+.interruptor[aria-pressed="true"] i {
+  transform: translateX(44px);
+}
+
+/* Opciones de acompañante: filas con botón de radio propio */
+.acompanante legend {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.acompanante label {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  column-gap: 14px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--linea);
+  cursor: pointer;
+  transition: padding 0.4s var(--curva);
+}
+
+.acompanante label:hover {
+  padding-left: 6px;
+}
+
+.acompanante input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  grid-row: span 2;
+  cursor: pointer;
+  transition: box-shadow 0.3s, background 0.3s;
+}
+
+.acompanante input:checked {
+  background: currentColor;
+  box-shadow: inset 0 0 0 4px var(--blanco);
+}
+
+.acompanante input:focus-visible {
+  outline: 2px solid var(--electrico);
+  outline-offset: 3px;
+}
+
+.acompanante span {
+  font-size: 16px;
+}
+
+.acompanante small {
+  font-size: 13px;
+  opacity: 0.55;
+}
+
+.humano__estado {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+}
+
+.avatares {
+  display: flex;
+}
+
+.avatares i {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 3px solid var(--blanco);
+  background: var(--agua);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--tinta);
+  transition: border-color 0.6s;
+}
+
+.avatares i:first-child { margin-left: 0; }
+.avatares i:nth-child(2) { background: var(--ambar); }
+.avatares i:nth-child(3) { background: var(--gris); }
+
+/* Revisión humana activa: la tarjeta se oscurece */
+.humano-activo .humano {
+  background: var(--tinta);
+  color: var(--blanco);
+}
+
+.humano-activo .humano .etiqueta-seccion { color: var(--ambar); }
+.humano-activo .humano .avatares i { border-color: var(--tinta); }
+.humano-activo .humano .acompanante label { border-top-color: rgba(255, 255, 255, 0.16); }
+.humano-activo .humano .acompanante input:checked { box-shadow: inset 0 0 0 4px var(--tinta); }
+
+/* Decisión */
+.decision {
+  display: grid;
+  align-content: start;
+  gap: 22px;
+  padding: clamp(24px, 3vw, 44px);
+  border-radius: calc(var(--radio) * 1.3);
+  border: 1px solid var(--linea);
+}
+
+.cambios {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  font-size: 15px;
+}
+
+.cambios li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: opacity 0.4s;
+}
+
+.cambios li.apagado {
+  opacity: 0.3;
+  text-decoration: line-through;
+}
+
+.opciones {
+  display: grid;
+  border-bottom: 1px solid var(--linea);
+}
+
+/* Cada opción es una fila: letra, texto y flecha. Se llena de izquierda a derecha */
+.opcion {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 1fr 32px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 12px;
+  border-top: 1px solid var(--linea);
+  text-align: left;
+  isolation: isolate;
+  transition: color 0.4s;
+}
+
+.opcion::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--tinta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--curva);
+}
+
+.opcion:hover,
+.opcion.elegida {
+  color: var(--blanco);
+}
+
+.opcion:hover::before,
+.opcion.elegida::before {
+  transform: scaleX(1);
+}
+
+.opcion__letra {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.4s, color 0.4s, border-color 0.4s;
+}
+
+.opcion.elegida .opcion__letra {
+  background: var(--ambar);
+  border-color: var(--ambar);
+  color: var(--tinta);
+}
+
+.opcion__texto {
+  font-size: clamp(18px, 1.6vw, 24px);
+  letter-spacing: -0.02em;
+}
+
+.opcion__flecha {
+  font-size: 20px;
+  transform: translateX(-8px);
+  opacity: 0.4;
+  transition: transform 0.5s var(--curva), opacity 0.3s;
+}
+
+.opcion:hover .opcion__flecha {
+  transform: none;
+  opacity: 1;
+}
+
+.decision__estado {
+  min-height: 1.4em;
+  font-size: clamp(18px, 1.6vw, 24px);
+  letter-spacing: -0.02em;
+}
+
+.decision__estado::before {
+  content: "→ ";
+  color: var(--electrico);
+}
+
+/* ---------- 14. Por qué ---------- */
+.porque .fijo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  padding: 0 calc(var(--margen) + 40px) 0 var(--margen);
+}
+
+.porque__texto {
+  max-width: 28ch;
+  font-size: clamp(30px, min(4.8vw, 7.6vh), 78px);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+}
+
+.porque__texto .palabra {
+  opacity: 0.13;
+  transition: opacity 0.35s, color 0.35s;
+}
+
+.porque__texto .palabra.encendida {
+  opacity: 1;
+}
+
+/* La última palabra encendida se marca en teal */
+.porque__texto .palabra.ultima {
+  color: var(--electrico);
+}
+
+/* ---------- 15. Fuller: las tarjetas se reparten ---------- */
+.fuller-bloque .fijo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 90px var(--margen) 110px;
+}
+
+.fuller {
+  position: relative;
+  flex: 1;
+  max-height: 56vh;
+}
+
+.fuller__tarjeta {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: min(30vw, 430px);
+  height: 100%;
+  margin-left: calc(min(30vw, 430px) / -2);
+  padding: clamp(20px, 2.2vw, 32px);
+  border-radius: calc(var(--radio) * 1.2);
+  background: var(--blanco);
+  box-shadow: 0 30px 70px rgba(11, 31, 32, 0.12);
+  will-change: transform;
+}
+
+.fuller__tarjeta:nth-child(2) {
+  background: var(--tinta);
+  color: var(--blanco);
+}
+
+.fuller__num {
+  font-size: clamp(56px, min(6vw, 10vh), 104px);
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: var(--electrico);
+}
+
+.fuller__tarjeta:nth-child(2) .fuller__num { color: var(--agua); }
+
+.fuller__tarjeta h3 {
+  font-size: clamp(28px, 2.8vw, 44px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.fuller__tarjeta p {
+  max-width: 28ch;
+  margin-top: 10px;
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+/* ---------- 16. Cierre ---------- */
+.cierre {
+  display: grid;
+  align-content: start;
+  gap: 48px;
+  min-height: 100vh;
+  padding: clamp(120px, 14vw, 200px) var(--margen) 0;
+  background: var(--tinta);
+  color: var(--blanco);
+  overflow: hidden;
+}
+
+.cierre__frase {
+  font-size: clamp(36px, 5.6vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.cierre__frase em { color: var(--agua); }
+
+.cinta {
+  margin: auto calc(var(--margen) * -1) 0;
+  padding-bottom: 90px;
+  overflow: hidden;
+}
+
+/* script.js la mueve: más rápido cuanto más rápido haces scroll */
+.cinta__pista {
+  display: flex;
+  gap: 0.25em;
+  width: max-content;
+  font-size: 15vw;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  color: var(--electrico);
+  will-change: transform;
+}
+
+/* ---------- 17. Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .linea > span,
+  [data-anim] { transition: none !important; }
+  .pista-scroll__raton i,
+  .visor .marcador { animation: none; }
+}
+
+/* ---------- 18. Responsive ---------- */
+@media (max-width: 1000px) {
+  .indice { display: none; }
+
+  .idea .fijo {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 28px;
+    padding-right: var(--margen);
+  }
+
+  .idea__lado { grid-template-columns: 1fr 1fr; align-items: center; }
+
+  .demo__arriba,
+  .decide {
+    grid-template-columns: 1fr;
+  }
+
+  .paso {
+    grid-template-columns: 1fr;
+    width: 78vw;
+  }
+
+  .como__intro { width: 60vw; }
+
+  .fuller__tarjeta {
+    width: 42vw;
+    margin-left: -21vw;
+  }
+}
+
+@media (max-width: 680px) {
+  .header { padding-top: 18px; padding-bottom: 18px; }
+
+  .portada .fijo { padding-top: 88px; }
+
+  .portada__foto {
+    clip-path: inset(
+      calc(var(--t) * 30vh) calc(var(--t) * 16px) calc(var(--t) * 16px) calc(var(--t) * 16px)
+      round calc(var(--t) * 18px + 0px)
+    );
+  }
+
+  .pista-scroll { display: none; }
+
+  .portada__escenario { bottom: 110px; right: 16px; }
+
+  .idea__lado { grid-template-columns: 1fr; }
+  .idea__lado p { display: none; }
+
+  .paso { width: 82vw; gap: 18px; }
+  .paso__texto { gap: 6px; }
+
+  .regla__zonas span { display: none; }
+
+  .visor__rotulo,
+  .visor__sello {
+    top: 10px;
+    left: 10px;
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .visor__rotulo--der { left: auto; right: 10px; }
+  .visor__sello { top: auto; bottom: 10px; }
+  .visor .marcador { width: 22px; height: 22px; font-size: 11px; }
+  .visor__manija { width: 44px; height: 44px; }
+
+  .cambios { grid-template-columns: 1fr; }
+
+  .cabeza {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* En celular las tarjetas de Fuller van una debajo de otra, sin animación */
+  .fuller-bloque { height: auto; }
+  .fuller-bloque .fijo { position: relative; height: auto; overflow: visible; }
+  .fuller { max-height: none; display: grid; gap: 12px; }
+  .fuller__tarjeta {
+    position: relative;
+    left: auto;
+    width: 100%;
+    height: 280px;
+    margin-left: 0;
+    transform: none !important;
+  }
+
+  .control {
+    bottom: 12px;
+    width: calc(100% - 24px);
+    justify-content: space-between;
+  }
+
+  .control__barra { flex: 1; width: auto; }
+  .control__ia { font-size: 0; gap: 0; padding: 0 8px; }
+}

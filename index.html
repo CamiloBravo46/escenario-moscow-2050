@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memoria propia · Moscú 2050</title>
+
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap">
+
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== ENCABEZADO ===== -->
+  <header class="header">
+    <a href="#inicio" class="logo">
+      <span class="logo__simbolo" aria-hidden="true"><i></i><i></i></span>
+      Memoria propia
+    </a>
+    <div class="header__der">
+      <nav class="idiomas" aria-label="Idioma">
+        <a href="index.html" aria-current="page">ES</a>
+        <a href="index-ru.html" lang="ru">RU</a>
+      </nav>
+      <p class="header__meta">Moscú <span>2050</span></p>
+    </div>
+  </header>
+
+  <!-- ===== ÍNDICE LATERAL: una raya por sección ===== -->
+  <nav class="indice" id="indice" aria-label="Secciones"></nav>
+
+  <!-- ===== CONTROL INFERIOR: sección actual, progreso, anterior/siguiente ===== -->
+  <nav class="control" aria-label="Recorrido de la página">
+    <button class="control__flecha" id="anterior" aria-label="Sección anterior">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+    </button>
+
+    <!-- Barra de progreso de toda la página -->
+    <span class="control__barra" aria-hidden="true"><i id="barraProgreso"></i></span>
+
+    <!-- Aviso cuando terminas una sección -->
+    <span class="control__aviso" id="avisoSeguir" aria-live="polite"></span>
+
+    <button class="control__flecha" id="siguiente" aria-label="Sección siguiente">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
+    </button>
+
+    <button class="control__ia" id="modoIA" aria-pressed="false">
+      <span class="conmutador" aria-hidden="true"><i></i></span>
+      Modo IA
+    </button>
+  </nav>
+
+  <div class="aviso-ia" role="status">Estás viendo la versión que generaría la IA</div>
+
+  <main>
+
+    <!-- 01 · PORTADA — se queda fija: la foto crece hasta llenar la pantalla
+         y las predicciones del escenario aparecen una por una -->
+    <section class="bloque bloque--fijo portada" id="inicio" data-nombre="Portada" style="--alto: 230vh">
+      <div class="fijo">
+        <h1 class="portada__frase" data-anim="lineas">
+          <span class="linea"><span>Una interfaz que obliga a la IA</span></span>
+          <span class="linea"><span>a <em>pedirte permiso</em> antes de</span></span>
+          <span class="linea"><span>reescribir tus recuerdos.</span></span>
+        </h1>
+
+        <div class="pista-scroll" aria-hidden="true">
+          <span class="pista-scroll__raton"><i></i></span>
+          Desliza
+        </div>
+
+        <figure class="portada__foto" id="portadaFoto">
+          <img src="assets/moscu-2050-vodogreev.webp" alt="Moscú en 2050: ciudad vertical con domos, dirigibles y edificios con jardines">
+          <div class="portada__velo"></div>
+          <ol class="portada__escenario" id="escenario">
+            <li data-en="0.30"><b>01</b><span>Una IA reconstruye la historia, incluso lo que nunca pasó.</span></li>
+            <li data-en="0.52"><b>02</b><span>Solo quienes tienen acceso la alimentan.</span></li>
+            <li data-en="0.74"><b>03</b><span>Nadie entiende cómo decide.</span></li>
+          </ol>
+          <figcaption class="pie-foto">Fig. 1 — Moscow 2050, Vodogreev · Earth 2050</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 02 · LA IDEA — se queda fija: las líneas del titular entran desde
+         los lados y el arco se dibuja con el scroll -->
+    <section class="bloque idea" id="idea" data-nombre="La idea" data-auto>
+      <div class="fijo">
+        <svg class="arco" viewBox="0 0 1000 900" preserveAspectRatio="none" aria-hidden="true">
+          <path id="arcoTrazo" pathLength="1" d="M -80 120 C 300 80, 560 330, 430 960"></path>
+        </svg>
+
+        <h2 class="gigante" id="gigante">
+          <span class="gigante__linea" data-lado="-1"><span class="sangria">El pasado</span></span>
+          <span class="gigante__linea" data-lado="1">ya no se</span>
+          <span class="gigante__linea" data-lado="-1">cuenta,</span>
+          <span class="gigante__linea" data-lado="1"><em>se genera.</em></span>
+        </h2>
+
+        <div class="idea__lado" id="ideaLado">
+          <figure class="duotono">
+            <img src="assets/moscu-2050-kremlin.webp" alt="El Kremlin reconstruido como lo imaginaría una IA">
+            <figcaption class="pie-foto">Fig. 2 — Un pasado «perfecto», generado</figcaption>
+          </figure>
+          <p>
+            En la Moscú de 2050 una IA reconstruye la historia con lo que la gente sube. <b>Memoria propia</b> es la pausa que falta: antes de tocar un recuerdo, la IA te pregunta, te muestra qué cambiaría y tú decides.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · CÓMO FUNCIONA — se queda fija y el scroll mueve los pasos de lado -->
+    <section class="bloque bloque--fijo como" id="como" data-nombre="Cómo funciona" style="--alto: 320vh">
+      <div class="fijo">
+        <div class="como__pista" id="comoPista">
+          <div class="como__intro">
+            <h2 class="grande" data-deslizar>
+              <span class="desliza" data-lado="-1">Cómo</span>
+              <span class="desliza" data-lado="1">funciona</span>
+            </h2>
+            <p class="cabeza__nota">Tres pasos. Ninguno es automático. Sigue deslizando →</p>
+          </div>
+
+          <article class="paso">
+            <figure class="paso__imagen">
+              <img src="assets/recuerdo/0-original.jpg" alt="">
+              <span class="paso__aviso">
+                <b>Archivo Neuromórfico</b>
+                quiere usar «Puente frente al Kremlin»
+              </span>
+            </figure>
+            <div class="paso__texto">
+              <span class="paso__num">01</span>
+              <h3>Llega una solicitud</h3>
+              <p>La IA te dice qué recuerdo quiere usar y para qué. Nada pasa sin que lo sepas.</p>
+            </div>
+          </article>
+
+          <article class="paso">
+            <figure class="paso__imagen paso__imagen--partida">
+              <img src="assets/recuerdo/0-original.jpg" alt="">
+              <img src="assets/recuerdo/4-reconstruir.jpg" alt="">
+            </figure>
+            <div class="paso__texto">
+              <span class="paso__num">02</span>
+              <h3>Comparas</h3>
+              <p>Tu original junto a la versión IA, con cada cambio marcado.</p>
+            </div>
+          </article>
+
+          <article class="paso">
+            <figure class="paso__imagen">
+              <img src="assets/recuerdo/0-original.jpg" alt="">
+              <span class="paso__sello">Protegido</span>
+            </figure>
+            <div class="paso__texto">
+              <span class="paso__num">03</span>
+              <h3>Decides y firmas</h3>
+              <p>Conservas el original, aceptas los cambios con marca de IA o no lo reconstruyes.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="como__progreso" aria-hidden="true"><i id="comoBarra"></i></div>
+      </div>
+    </section>
+
+    <!-- 04 · PRUÉBALO — el nivel de IA va arriba del comparador -->
+    <section class="bloque demo" id="demo" data-nombre="Pruébalo">
+      <div class="demo__arriba">
+        <div class="demo__titulo">
+          <h2 class="grande" data-deslizar>
+            <span class="desliza desliza--pegada" data-lado="-1">Prué</span><span class="desliza desliza--pegada" data-lado="1"><em>balo</em></span>
+          </h2>
+          <p class="cabeza__nota" data-anim="subir">Elige cuánto puede intervenir la IA y arrastra la línea para comparar.</p>
+        </div>
+
+        <div class="regla" data-anim="subir" style="--d: .15s">
+          <div class="regla__cabeza">
+            <span class="regla__etiqueta">Nivel de intervención de la IA</span>
+            <span class="regla__valor"><output id="nivelValor" for="nivel">63</output>%</span>
+          </div>
+
+          <div class="regla__escala" id="escala">
+            <span class="regla__lleno" id="reglaLleno"></span>
+            <span class="regla__aguja" id="aguja"><b id="nivelNombre">Reinterpretar</b></span>
+            <input type="range" id="nivel" min="1" max="100" value="63"
+                   aria-label="Nivel de intervención de la IA, de 1 a 100 por ciento">
+          </div>
+
+          <ol class="regla__zonas" id="niveles">
+            <li data-desde="1"><b>Restaurar</b><span>Le pone color</span></li>
+            <li data-desde="26"><b>Completar</b><span>Borra daños</span></li>
+            <li data-desde="51"><b>Reinterpretar</b><span>Cambia el cielo</span></li>
+            <li data-desde="76"><b>Reconstruir</b><span>Añade lo que no estaba</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="demo__escena">
+        <div class="demo__tarjeta" id="demoTarjeta">
+          <div class="visor" id="visor" style="--pos: 50%;">
+            <div class="visor__ia" id="versionesIA">
+              <img class="visor__img" src="assets/recuerdo/1-restaurar.jpg" alt="Versión IA: restaurada y coloreada">
+              <img class="visor__img" src="assets/recuerdo/2-completar.jpg" alt="Versión IA: daños borrados">
+              <img class="visor__img" src="assets/recuerdo/3-reinterpretar.jpg" alt="Versión IA: cielo reinterpretado">
+              <img class="visor__img" src="assets/recuerdo/4-reconstruir.jpg" alt="Versión IA: escena reconstruida con elementos nuevos">
+            </div>
+            <img class="visor__img visor__img--original" src="assets/recuerdo/0-original.jpg" alt="Tu recuerdo original: postal en sepia del puente frente al Kremlin">
+
+            <span class="visor__rotulo">Tu original</span>
+            <span class="visor__rotulo visor__rotulo--der">IA · <b id="rotuloNivel">63</b>% generado</span>
+            <span class="visor__sello" id="seloHumano">Revisión humana activa</span>
+
+            <i class="marcador" data-desde="1"  style="top: 20%; left: 64%;">1</i>
+            <i class="marcador" data-desde="26" style="top: 9%;  left: 52%;">2</i>
+            <i class="marcador" data-desde="51" style="top: 20%; left: 86%;">3</i>
+            <i class="marcador" data-desde="76" style="top: 82%; left: 70%;">4</i>
+
+            <div class="visor__linea">
+              <span class="visor__manija" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg>
+              </span>
+            </div>
+            <input type="range" min="0" max="100" value="50" id="deslizador" aria-label="Comparar tu original con la versión IA">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · DECIDE -->
+    <section class="bloque decide-bloque" id="decide" data-nombre="Decide">
+      <div class="cabeza">
+        <h2 class="grande" data-deslizar>
+          <span class="desliza desliza--pegada" data-lado="-1">Tú</span> <span class="desliza desliza--pegada" data-lado="1"><em>decides</em></span>
+        </h2>
+        <p class="cabeza__nota" data-anim="subir">Nada se toma por defecto.<br>Si no respondes, no se usa.</p>
+      </div>
+
+      <div class="decide">
+        <article class="humano" data-anim="subir" style="--d: .1s">
+          <div class="humano__cabeza">
+            <div>
+              <p class="etiqueta-seccion">Asistencia humana</p>
+              <h3 class="humano__titulo">Revisarlo con una persona</h3>
+            </div>
+            <button class="interruptor" id="humano" aria-pressed="false" aria-label="Pedir revisión humana">
+              <span class="interruptor__no" aria-hidden="true">No</span>
+              <span class="interruptor__si" aria-hidden="true">Sí</span>
+              <i aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <p class="humano__texto">Alguien de carne y hueso lo revisa contigo antes de que la IA lo use. Sin su firma y la tuya, nada avanza.</p>
+
+          <fieldset class="acompanante">
+            <legend>¿Quién te acompaña?</legend>
+            <label><input type="radio" name="acompanante" value="Colectivo de memoria" checked><span>Colectivo de memoria</span><small>De tu nivel de la ciudad</small></label>
+            <label><input type="radio" name="acompanante" value="Un familiar"><span>Un familiar</span><small>Alguien que estuvo ahí</small></label>
+            <label><input type="radio" name="acompanante" value="Archivista del barrio"><span>Archivista del barrio</span><small>Conoce la historia local</small></label>
+          </fieldset>
+
+          <p class="humano__estado"><span class="avatares" aria-hidden="true"><i>VA</i><i>LK</i><i>MS</i></span><span id="humanoEstado">Desactivada · decides solo</span></p>
+        </article>
+
+        <div class="decision" data-anim="subir" style="--d: .2s">
+          <p class="etiqueta-seccion">Lo que cambió la IA</p>
+          <ul class="cambios">
+            <li data-desde="1"><i class="marcador">1</i> Colores inventados</li>
+            <li data-desde="26"><i class="marcador">2</i> Manchas y daños borrados</li>
+            <li data-desde="51"><i class="marcador">3</i> Cielo azul con nubes</li>
+            <li data-desde="76"><i class="marcador">4</i> Árboles, bancas y gente añadidos</li>
+          </ul>
+
+          <div class="opciones" role="group" aria-label="Tu decisión">
+            <button class="opcion" data-decision="Conservaste el original. La IA no lo modificará.">
+              <span class="opcion__letra">A</span>
+              <span class="opcion__texto">Conservar el original</span>
+              <span class="opcion__flecha" aria-hidden="true">→</span>
+            </button>
+            <button class="opcion" data-decision="Aceptaste los cambios. Quedarán marcados como generados por IA.">
+              <span class="opcion__letra">B</span>
+              <span class="opcion__texto">Aceptar con marca de IA</span>
+              <span class="opcion__flecha" aria-hidden="true">→</span>
+            </button>
+            <button class="opcion" data-decision="No se reconstruye. Tu recuerdo queda protegido.">
+              <span class="opcion__letra">C</span>
+              <span class="opcion__texto">No reconstruir</span>
+              <span class="opcion__flecha" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="decision__estado" id="estado" aria-live="polite">Esperando tu decisión</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · POR QUÉ — se queda fija y el texto se ilumina palabra por palabra -->
+    <section class="bloque porque" id="por-que" data-nombre="Por qué" data-auto>
+      <div class="fijo">
+        <p class="etiqueta-seccion">Por qué</p>
+        <p class="porque__texto" id="textoLlenar">
+          En Moscú 2050 una IA reconstruye el pasado y solo quienes tienen acceso la alimentan. Nos preguntamos cómo el diseño gráfico puede devolverles a las personas el control sobre cómo se cuenta su propia historia.
+        </p>
+      </div>
+    </section>
+
+    <!-- 07 · FULLER — se queda fija: las tarjetas empiezan apiladas y se reparten -->
+    <section class="bloque bloque--fijo fuller-bloque" id="fuller" data-nombre="Fuller" style="--alto: 200vh">
+      <div class="fijo">
+        <div class="cabeza">
+          <h2 class="grande" data-deslizar>
+            <span class="desliza" data-lado="-1">Lo que ninguna IA</span>
+            <span class="desliza" data-lado="1">puede <em>calcular</em></span>
+          </h2>
+          <p class="cabeza__nota">Respuesta a la pregunta<br>de Jarrett Fuller</p>
+        </div>
+
+        <div class="fuller" id="fullerMazo">
+          <article class="fuller__tarjeta">
+            <span class="fuller__num">01</span>
+            <div><h3>Punto de vista</h3><p>La IA sabe qué pasó, pero no qué significa para quien lo vivió.</p></div>
+          </article>
+          <article class="fuller__tarjeta">
+            <span class="fuller__num">02</span>
+            <div><h3>Historia</h3><p>En el centro hay una persona real, con nombre y firma.</p></div>
+          </article>
+          <article class="fuller__tarjeta">
+            <span class="fuller__num">03</span>
+            <div><h3>Fricción</h3><p>Una pausa a propósito: ver, entender y decidir.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · CIERRE -->
+    <section class="bloque cierre" id="cierre" data-nombre="Cierre">
+      <p class="cierre__frase" data-deslizar>
+        <span class="desliza" data-lado="-1">La IA calcula el pasado.</span>
+        <span class="desliza" data-lado="1"><em>El diseñador defiende</em></span>
+        <span class="desliza" data-lado="-1"><em>a quien lo vivió.</em></span>
+      </p>
+
+      <a href="#inicio" class="enlace enlace--claro" data-anim="subir" style="--d: .3s">
+        <span class="enlace__texto"><span data-texto="Volver al inicio">Volver al inicio</span></span>
+        <span class="enlace__flecha" aria-hidden="true">↑</span>
+      </a>
+
+      <!-- La cinta corre más rápido cuanto más rápido haces scroll -->
+      <div class="cinta" aria-hidden="true">
+        <div class="cinta__pista" id="cinta">
+          <span>Memoria propia</span><span>·</span><span>Memoria propia</span><span>·</span>
+          <span>Memoria propia</span><span>·</span><span>Memoria propia</span><span>·</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
