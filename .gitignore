@@ -1,2 +1,5 @@
 # Imágenes originales en PNG (pesadas). La web usa sus copias livianas de assets/recuerdo/
 assets/*.png
+
+# Boceto de la infografía: solo local, no se publica
+infografia.html

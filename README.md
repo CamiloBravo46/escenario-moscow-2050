@@ -8,7 +8,6 @@ Una interfaz especulativa que obliga a la IA a pedir permiso antes de reescribir
 
 - `index-ru.html`: versión en ruso, el idioma del escenario.
 - `index.html`: versión en español.
-- `infografia.html`: infografía de proceso en tamaño tabloide (11 × 17 in).
 
 ## Estructura
 
