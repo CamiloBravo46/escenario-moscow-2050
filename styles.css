@@ -600,7 +600,7 @@ em {
   z-index: 1;
   background: var(--tinta);
   clip-path: inset(
-    calc(var(--t) * 37vh) calc(var(--t) * var(--margen)) calc(var(--t) * 22px) calc(var(--t) * var(--margen))
+    calc(var(--t) * var(--tope, 37vh)) calc(var(--t) * var(--margen)) calc(var(--t) * 22px) calc(var(--t) * var(--margen))
     round calc(var(--t) * 24px + 0px)
   );
 }
@@ -1697,26 +1697,106 @@ em {
 }
 
 @media (max-width: 680px) {
-  .header { padding-top: 18px; padding-bottom: 18px; }
+  /* Encabezado con fondo propio: así no se monta sobre el contenido */
+  .header {
+    padding: 12px 16px;
+    background: rgba(241, 243, 241, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: color 0.5s, background 0.5s;
+  }
 
-  .portada .fijo { padding-top: 88px; }
+  .header--claro { color: var(--tinta); } /* sobre fondo claro siempre se lee */
+
+  .oscuro .header {
+    background: rgba(11, 31, 32, 0.92);
+    color: var(--blanco);
+  }
+
+  .logo {
+    gap: 10px;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .logo__simbolo { width: 22px; height: 22px; }
+  .logo__simbolo i { width: 15px; height: 15px; border-radius: 4px; }
+
+  .header__der { gap: 10px; }
+  .header__meta { display: none; }
+
+  /* Portada: la frase más pequeña; la foto empieza justo debajo (script.js calcula --tope) */
+  .portada .fijo { padding-top: 76px; }
+
+  .portada__frase {
+    font-size: clamp(24px, 7.2vw, 34px) !important;
+    line-height: 1.08;
+  }
 
   .portada__foto {
     clip-path: inset(
-      calc(var(--t) * 30vh) calc(var(--t) * 16px) calc(var(--t) * 16px) calc(var(--t) * 16px)
+      calc(var(--t) * var(--tope, 34vh)) calc(var(--t) * 16px) calc(var(--t) * 86px) calc(var(--t) * 16px)
       round calc(var(--t) * 18px + 0px)
     );
   }
 
   .pista-scroll { display: none; }
 
-  .portada__escenario { bottom: 110px; right: 16px; }
+  .portada__escenario { bottom: 100px; right: 16px; gap: 12px; }
+  .portada__escenario li { font-size: 20px; gap: 12px; }
 
   .idea__lado { grid-template-columns: 1fr; }
   .idea__lado p { display: none; }
 
-  .paso { width: 82vw; gap: 18px; }
+  /* Los títulos que entran de lado pueden partirse en varias líneas */
+  .desliza,
+  .gigante__linea { white-space: normal; }
+
+  /* ---- Cómo funciona: en celular se desliza de lado con el dedo ---- */
+  .bloque--fijo.como { height: auto; }
+
+  .como .fijo {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    padding: 96px 0 56px;
+  }
+
+  .como__pista {
+    width: 100%;
+    gap: 14px;
+    padding: 0 16px 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    transform: none !important;
+  }
+
+  .como__pista::-webkit-scrollbar { display: none; }
+
+  .como__intro,
+  .paso {
+    flex: 0 0 84vw;
+    width: 84vw;
+    scroll-snap-align: start;
+  }
+
+  .paso { gap: 14px; opacity: 1 !important; }
   .paso__texto { gap: 6px; }
+  .paso__aviso { max-width: 70%; padding: 10px 12px 10px 32px; font-size: 12px; }
+  .paso__aviso::before { left: 12px; top: 14px; }
+
+  /* La barra de abajo muestra cuánto has deslizado */
+  .como__progreso {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin: 18px 16px 0;
+  }
 
   .regla__zonas span { display: none; }
 
@@ -1741,18 +1821,46 @@ em {
     gap: 12px;
   }
 
-  /* En celular las tarjetas de Fuller van una debajo de otra, sin animación */
+  /* ---- Fuller: en celular las tarjetas también se deslizan de lado ---- */
   .fuller-bloque { height: auto; }
-  .fuller-bloque .fijo { position: relative; height: auto; overflow: visible; }
-  .fuller { max-height: none; display: grid; gap: 12px; }
+
+  .fuller-bloque .fijo {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    padding: 90px 0 60px;
+  }
+
+  .fuller-bloque .cabeza { padding: 0 16px; }
+
+  .fuller {
+    display: flex;
+    gap: 12px;
+    max-height: none;
+    padding: 0 16px 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .fuller::-webkit-scrollbar { display: none; }
+
   .fuller__tarjeta {
     position: relative;
     left: auto;
-    width: 100%;
-    height: 280px;
+    flex: 0 0 78vw;
+    width: 78vw;
+    height: 300px;
     margin-left: 0;
+    scroll-snap-align: start;
     transform: none !important;
   }
+
+  /* ---- Cierre ---- */
+  .cierre { padding-top: 120px; gap: 36px; }
+  .cierre__frase { font-size: clamp(30px, 9vw, 44px); }
 
   .control {
     bottom: 12px;

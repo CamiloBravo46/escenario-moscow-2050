@@ -224,6 +224,19 @@ function actualizarNavegacion() {
 
 // ---------- 3. Preparar las animaciones ----------
 const portada = $("#inicio");
+
+// En celular (pantallas angostas) algunas partes cambian de comportamiento
+const consultaCelular = window.matchMedia("(max-width: 680px)");
+const esCelular = () => consultaCelular.matches;
+
+// La foto de la portada empieza justo debajo de la frase, mida lo que mida
+function calcularTope() {
+  const frase = $(".portada__frase");
+  portada.style.setProperty("--tope", `${Math.round(frase.offsetTop + frase.offsetHeight + 20)}px`);
+}
+calcularTope();
+window.addEventListener("resize", calcularTope);
+document.fonts && document.fonts.ready.then(calcularTope);
 const escenario = $$("#escenario li");
 const header = $(".header");
 
@@ -324,11 +337,20 @@ function animar() {
   // b) LA IDEA y POR QUÉ se animan solas al aparecer (ver "animacionesSolas")
   animacionesSolas(alto);
 
-  // c) CÓMO FUNCIONA: el scroll vertical mueve los pasos de lado
-  // (una pausa corta al inicio y al final para leer con calma)
-  const pC = limitar((progresoFijo(como) - 0.08) / 0.84);
-  const recorrido = comoPista.scrollWidth - ancho;
-  comoPista.style.transform = `translateX(${(-pC * recorrido).toFixed(1)}px)`;
+  // c) CÓMO FUNCIONA
+  // En computador el scroll vertical mueve los pasos de lado (con una pausa
+  // al inicio y al final). En celular los pasos se deslizan con el dedo y la
+  // barra solo muestra cuánto has avanzado.
+  let pC;
+  if (esCelular()) {
+    comoPista.style.transform = "";
+    const maxLado = comoPista.scrollWidth - comoPista.clientWidth;
+    pC = maxLado > 0 ? limitar(comoPista.scrollLeft / maxLado) : 0;
+  } else {
+    pC = limitar((progresoFijo(como) - 0.08) / 0.84);
+    const recorrido = comoPista.scrollWidth - ancho;
+    comoPista.style.transform = `translateX(${(-pC * recorrido).toFixed(1)}px)`;
+  }
   comoBarra.style.setProperty("--p", pC.toFixed(4));
   const centro = ancho / 2;
   pasos.forEach((paso) => {
@@ -343,7 +365,8 @@ function animar() {
   demoTarjeta.style.setProperty("--sc", (0.86 + pD * 0.14).toFixed(4));
 
   // f) FULLER: las tarjetas empiezan apiladas y se reparten
-  const pF = suavizar(limitar((progresoFijo(fuller) - 0.08) / 0.6));
+  // (en celular se deslizan de lado y no necesitan esta animación)
+  const pF = esCelular() ? 1 : suavizar(limitar((progresoFijo(fuller) - 0.08) / 0.6));
   const giros = [-8, 3, 10];
   const ancho1 = cartas[0].offsetWidth;
   cartas.forEach((c, i) => {
